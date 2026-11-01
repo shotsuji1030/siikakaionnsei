@@ -14,7 +14,7 @@ h1 {letter-spacing: .04em;}
 st.title("展示音声ガイド")
 
 BASE_DIR = Path(__file__).resolve().parent
-TRACKS = [("音声① 展示案内", "guide.mp3"), ("音声②", "guide.m4a")]
+TRACKS = [("音声① 展示案内", "guide.m4a"), ("音声②", "guide2.m4a")]
 
 @st.cache_data
 def audio_data(path: str, modified_ns: int) -> str:
@@ -44,12 +44,12 @@ button{cursor:pointer;border:1px solid #d6d0c7;border-radius:12px;padding:13px 1
 button.primary{background:#315c62;color:white;border-color:#315c62;flex:1;min-width:160px}
 .settings{display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:14px}
 .setting{display:flex;align-items:center;gap:7px}select{padding:8px;border:1px solid #ddd5cb;border-radius:8px;background:white;max-width:100%}
-input[type=range]{accent-color:#416b70;max-width:125px}.track{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
-.track select{flex:1;min-width:150px;font-size:16px;padding:11px}
+input[type=range]{accent-color:#416b70;max-width:125px}.track-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.track-button{min-height:68px;padding:12px 8px;white-space:normal}.track-button.active{background:#315c62;color:white;border-color:#315c62;box-shadow:0 0 0 2px #315c6222}
 .note{font-size:12px;color:#857d74;margin-top:16px}
 @media(max-width:430px){.panel{padding:17px}.settings{gap:12px}}
 </style></head><body><section class="panel">
-<label class="track"><strong>再生する音声</strong><select id="track" aria-label="再生する音声"></select></label>
+<div class="track-buttons" id="track-buttons" aria-label="音声の選択"></div>
 <div class="status" id="status">停止中</div>
 <audio id="audio" preload="metadata"></audio>
 <input id="seek" class="bar" type="range" value="0" min="0" max="1000" aria-label="再生位置"/>
@@ -59,20 +59,19 @@ input[type=range]{accent-color:#416b70;max-width:125px}.track{display:flex;align
 <label class="setting"><input type="checkbox" id="loop" checked/>自動で繰り返す</label>
 <label class="setting">次の再生まで <select id="delay"><option value="0">0秒</option><option value="3" selected>3秒</option><option value="5">5秒</option><option value="10">10秒</option><option value="20">20秒</option></select></label>
 <label class="setting">音量 <input type="range" id="volume" min="0" max="1" step="0.05" value="1"/></label>
-</div><div class="note">音声を切り替えると再生は停止します。「再生する」を押すと選択した音声が流れます。</div>
+</div><div class="note">音声①・音声②のボタンを押すと、選んだ音声が最初から再生されます。</div>
 </section>
 <script>
 const tracks = __TRACKS__;
-const a=document.getElementById('audio'), track=document.getElementById('track'), play=document.getElementById('play'), restart=document.getElementById('restart'), seek=document.getElementById('seek'), loop=document.getElementById('loop'), delay=document.getElementById('delay'), volume=document.getElementById('volume'), status=document.getElementById('status');
-let timer=null;
-for (const [i,item] of tracks.entries()) { const option=document.createElement('option');option.value=String(i);option.textContent=item.name;track.appendChild(option); }
+const a=document.getElementById('audio'), trackButtons=document.getElementById('track-buttons'), play=document.getElementById('play'), restart=document.getElementById('restart'), seek=document.getElementById('seek'), loop=document.getElementById('loop'), delay=document.getElementById('delay'), volume=document.getElementById('volume'), status=document.getElementById('status');
+let timer=null, activeIndex=0, playRequest=0;
+for (const [i,item] of tracks.entries()) { const btn=document.createElement('button');btn.type='button';btn.className='track-button';btn.textContent='▶ '+item.name;btn.dataset.index=String(i);btn.addEventListener('click',()=>choose(i,true));trackButtons.appendChild(btn); }
 const fmt=t=>Number.isFinite(t)?Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0'):'--:--';
 function cancel(){if(timer!==null){clearTimeout(timer);timer=null}}
 function update(){document.getElementById('current').textContent=fmt(a.currentTime);document.getElementById('duration').textContent=fmt(a.duration);seek.value=Number.isFinite(a.duration)&&a.duration>0?String(Math.floor(1000*a.currentTime/a.duration)):'0'}
 function refresh(){play.textContent=a.paused?'▶ 再生する':'Ⅱ 一時停止';if(!a.paused)status.textContent='音声を再生中';else if(timer===null && !a.ended)status.textContent='停止中'}
-async function start(){cancel();try{await a.play();refresh()}catch(e){status.textContent='再生できませんでした。再生ボタンを押し直してください。'}}
-function choose(index){cancel();a.pause();a.src=tracks[index].src;a.load();seek.value='0';document.getElementById('current').textContent='0:00';document.getElementById('duration').textContent='--:--';status.textContent='停止中';refresh()}
-track.addEventListener('change',()=>choose(Number(track.value)));
+async function start(){cancel();const request=++playRequest;try{await a.play();if(request===playRequest)refresh()}catch(e){if(request===playRequest)status.textContent='再生できませんでした。再生ボタンを押し直してください。'}}
+function choose(index,autoplay=false){cancel();++playRequest;a.pause();activeIndex=index;a.src=tracks[index].src;a.load();seek.value='0';document.getElementById('current').textContent='0:00';document.getElementById('duration').textContent='--:--';status.textContent='停止中';for(const btn of trackButtons.children){const selected=Number(btn.dataset.index)===index;btn.classList.toggle('active',selected);btn.setAttribute('aria-pressed',String(selected))}refresh();if(autoplay)start()}
 play.addEventListener('click',()=>{if(timer!==null){cancel();a.currentTime=0;start()}else if(a.paused){if(a.ended)a.currentTime=0;start()}else{a.pause();refresh()}});
 restart.addEventListener('click',()=>{cancel();a.currentTime=0;start()});
 a.addEventListener('timeupdate',update);a.addEventListener('loadedmetadata',update);a.addEventListener('play',refresh);a.addEventListener('pause',refresh);
@@ -84,5 +83,4 @@ window.addEventListener('pagehide',()=>{cancel();a.pause()});
 choose(0);
 </script></body></html>'''
 html = html.replace("__TRACKS__", json.dumps(available, ensure_ascii=False))
-components.html(html, height=390, scrolling=False)
-
+components.html(html, height=405, scrolling=False)
