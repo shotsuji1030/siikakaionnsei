@@ -14,7 +14,7 @@ h1 {letter-spacing: .04em;}
 st.title("展示音声ガイド")
 
 BASE_DIR = Path(__file__).resolve().parent
-TRACKS = [("音声① 展示案内", "guide.m4a"), ("音声②", "guide2.m4a")]
+TRACKS = [("音声① 展示案内", "guide.mp3"), ("音声②", "guide2.m4a")]
 
 @st.cache_data
 def audio_data(path: str, modified_ns: int) -> str:
