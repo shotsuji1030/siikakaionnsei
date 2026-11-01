@@ -14,7 +14,7 @@ h1 {letter-spacing: .04em;}
 st.title("展示音声ガイド")
 
 BASE_DIR = Path(__file__).resolve().parent
-TRACKS = [("音声① 展示案内", "guide.mp3"), ("音声②", "guide2.m4a")]
+TRACKS = [("音声① 展示案内", "guide.mp3"), ("音声②", "guide.m4a")]
 
 @st.cache_data
 def audio_data(path: str, modified_ns: int) -> str:
@@ -24,12 +24,12 @@ available = []
 for name, filename in TRACKS:
     path = BASE_DIR / filename
     if path.is_file():
-        available.append({"name": name, "src": f"data:audio/mp4;base64,{audio_data(str(path), path.stat().st_mtime_ns)}"})
+        available.append({"name": name, "src": f"data:{'audio/mpeg' if path.suffix.lower() == '.mp3' else 'audio/mp4'};base64,{audio_data(str(path), path.stat().st_mtime_ns)}"})
     else:
         st.warning(f"{filename} が見つかりません。app.py と同じフォルダに配置してください。")
 
 if not available:
-    st.error("音声ファイルがありません。guide.m4a と guide2.m4a を配置してください。")
+    st.error("音声ファイルがありません。guide.mp3 と guide.m4a を配置してください。")
     st.stop()
 
 html = r'''<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"/>
