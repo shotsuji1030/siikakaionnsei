@@ -4,7 +4,7 @@ import base64
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="詩歌会 | 展示音声ガイド", page_icon="📖", layout="centered")
+st.set_page_config(page_title="展示音声ガイド", page_icon="📖", layout="centered")
 st.markdown("""<style>
 .stApp {background: #faf8f4; color: #282521;}
 .block-container {max-width: 760px; padding-top: 3rem;}
