@@ -31,7 +31,7 @@ html = """<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"/><meta name
 <div class="times"><span id="current">0:00</span><span id="duration">--:--</span></div>
 <div class="actions"><button class="primary" id="play">▶ 再生する</button><button id="restart">↺ 最初から</button></div>
 <div class="settings"><label class="setting"><input type="checkbox" id="loop" checked/>自動で繰り返す</label><label class="setting">次の再生まで <select id="delay"><option value="0">0秒</option><option value="3" selected>3秒</option><option value="5">5秒</option><option value="10">10秒</option><option value="20">20秒</option></select></label><label class="setting">音量 <input type="range" id="volume" min="0" max="1" step="0.05" value="1"/></label></div>
-<div class="note">※ </div></section>
+<div class="note"> </div></section>
 <script>
 const a=document.getElementById('audio'), play=document.getElementById('play'), restart=document.getElementById('restart'), seek=document.getElementById('seek'), loop=document.getElementById('loop'), delay=document.getElementById('delay'), volume=document.getElementById('volume'), status=document.getElementById('status');let timer=null;
 const fmt=t=>{if(!Number.isFinite(t))return '--:--';return Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0')};
