@@ -10,9 +10,9 @@ st.markdown("""<style>
 .block-container {max-width: 760px; padding-top: 3rem;}
 h1 {letter-spacing:.04em;}
 </style>""", unsafe_allow_html=True)
-st.caption("詩歌会  /  EXHIBITION AUDIO GUIDE")
+st.caption("詩歌会")
 st.title("展示音声ガイド")
-st.write("会場のご案内を音声でお届けします。再生ボタンを押すと、繰り返し放送できます。")
+st.write("再生ボタンを押すと、繰り返し放送")
 
 audio_path = Path(__file__).resolve().parent / "guide.mp3"
 if not audio_path.exists():
@@ -31,7 +31,7 @@ html = """<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"/><meta name
 <div class="times"><span id="current">0:00</span><span id="duration">--:--</span></div>
 <div class="actions"><button class="primary" id="play">▶ 再生する</button><button id="restart">↺ 最初から</button></div>
 <div class="settings"><label class="setting"><input type="checkbox" id="loop" checked/>自動で繰り返す</label><label class="setting">次の再生まで <select id="delay"><option value="0">0秒</option><option value="3" selected>3秒</option><option value="5">5秒</option><option value="10">10秒</option><option value="20">20秒</option></select></label><label class="setting">音量 <input type="range" id="volume" min="0" max="1" step="0.05" value="1"/></label></div>
-<div class="note">※ ブラウザの仕様により、最初の再生は手動で開始してください。</div></section>
+<div class="note">※ </div></section>
 <script>
 const a=document.getElementById('audio'), play=document.getElementById('play'), restart=document.getElementById('restart'), seek=document.getElementById('seek'), loop=document.getElementById('loop'), delay=document.getElementById('delay'), volume=document.getElementById('volume'), status=document.getElementById('status');let timer=null;
 const fmt=t=>{if(!Number.isFinite(t))return '--:--';return Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0')};
@@ -48,4 +48,4 @@ loop.addEventListener('change',()=>{if(!loop.checked){cancel();status.textConten
 window.addEventListener('pagehide',cancel);
 </script></body></html>""".replace('AUDIOBASE64', b64)
 components.html(html, height=350, scrolling=False)
-st.caption("提供：詩歌会　｜　案内音声『civic』『31』")
+
