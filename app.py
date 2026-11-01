@@ -1,4 +1,4 @@
-"""詩歌会 展示音声ガイド（2種類の固定音声に対応）"""
+"""詩歌会 展示音声ガイド"""
 from pathlib import Path
 import base64
 import json
@@ -14,7 +14,7 @@ h1 {letter-spacing: .04em;}
 st.title("展示音声ガイド")
 
 BASE_DIR = Path(__file__).resolve().parent
-TRACKS = [("音声① 展示案内", "guide.mp3"), ("音声②", "guide.m4a")]
+TRACKS = [("音声①", "guide.mp3"), ("音声②小島special", "guide.m4a")]
 
 @st.cache_data
 def audio_data(path: str, modified_ns: int) -> str:
@@ -59,7 +59,7 @@ input[type=range]{accent-color:#416b70;max-width:125px}.track-buttons{display:gr
 <label class="setting"><input type="checkbox" id="loop" checked/>自動で繰り返す</label>
 <label class="setting">次の再生まで <select id="delay"><option value="0">0秒</option><option value="3" selected>3秒</option><option value="5">5秒</option><option value="10">10秒</option><option value="20">20秒</option></select></label>
 <label class="setting">音量 <input type="range" id="volume" min="0" max="1" step="0.05" value="1"/></label>
-</div><div class="note">音声①・音声②のボタンを押すと、選んだ音声が最初から再生されます。</div>
+</div><div class="note"></div>
 </section>
 <script>
 const tracks = __TRACKS__;
