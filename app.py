@@ -10,9 +10,8 @@ st.markdown("""<style>
 .block-container {max-width: 760px; padding-top: 3rem;}
 h1 {letter-spacing:.04em;}
 </style>""", unsafe_allow_html=True)
-st.caption("詩歌会")
+#st.caption("詩歌会")
 st.title("展示音声ガイド")
-st.write("再生ボタンを押すと、繰り返し放送")
 
 audio_path = Path(__file__).resolve().parent / "guide.mp3"
 if not audio_path.exists():
