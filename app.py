@@ -13,7 +13,7 @@ h1 {letter-spacing:.04em;}
 #st.caption("詩歌会")
 st.title("展示音声ガイド")
 
-audio_path = Path(__file__).resolve().parent / "guide.mp3"
+audio_path = Path(__file__).resolve().parent / "guide.m4a"
 if not audio_path.exists():
     st.error("guide.mp3 が見つかりません。app.py と同じフォルダに配置してください。")
     st.stop()
